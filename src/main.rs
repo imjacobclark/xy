@@ -7,5 +7,5 @@ fn main() {
 
     let file_path = &args[1];
 
-    scanner::scan(fs::read_to_string::<&String>, file_path);
+    println!("{:?}", scanner::scan(fs::read_to_string::<&String>, file_path));
 }

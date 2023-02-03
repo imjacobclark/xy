@@ -1,7 +1,7 @@
 use std::io::{self, Error};
 
 #[derive(Debug)]
-enum Token {
+pub enum Token {
     Number(char),
     Letter(char),
     Symbol(char),
@@ -22,7 +22,7 @@ pub fn translate_input_to_chars_vec(untokenised_input: &String) -> Vec<String> {
         .collect();
 }
 
-fn character_type(s: String) -> Token {
+fn tokenise(s: String) -> Token {
     let c = s.chars().next().unwrap();
 
     match c {
@@ -33,7 +33,7 @@ fn character_type(s: String) -> Token {
     }
 }
 
-pub fn scan<P>(reader: fn(P) -> Result<String, Error>, file_path: P) {
+pub fn scan<P>(reader: fn(P) -> Result<String, Error>, file_path: P) -> Vec<Token> {
     let input = reader(file_path).unwrap_or_else(|_| {
         eprintln!("Error reading file");
         std::process::exit(1);
@@ -42,7 +42,10 @@ pub fn scan<P>(reader: fn(P) -> Result<String, Error>, file_path: P) {
     let untokenised_input_vec = translate_input_to_chars_vec(&input);
     let clean_untokenised_input_vec: Vec<String> = strip_whitespace(untokenised_input_vec);
 
-    let tokenised_input: Vec<Token> = clean_untokenised_input_vec.iter().map(|x| character_type(x.to_string())).collect();
+    let tokenised_input: Vec<Token> = clean_untokenised_input_vec
+        .iter()
+        .map(|x| tokenise(x.to_string()))
+        .collect();
 
-    println!("{:?}", tokenised_input);
+    return tokenised_input;
 }
