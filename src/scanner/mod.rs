@@ -1,11 +1,16 @@
 use std::io::{self, Error};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub enum Token {
     Number(char),
     Letter(char),
     Symbol(char),
     Return,
+    Eq,
+    Add,
+    Subtract,
+    Divide,
+    Multiply,
 }
 
 pub fn strip_whitespace(tokens: Vec<String>) -> Vec<String> {
@@ -26,6 +31,11 @@ fn tokenise(s: String) -> Token {
     let c = s.chars().next().unwrap();
 
     match c {
+        c if c == '+' => Token::Add,
+        c if c == '-' => Token::Subtract,
+        c if c == '/' => Token::Divide,
+        c if c == '*' => Token::Multiply,
+        c if c == '=' => Token::Eq,
         c if c == '\n' => Token::Return,
         c if c.is_numeric() => Token::Number(c),
         c if c.is_alphabetic() => Token::Letter(c),
