@@ -27,22 +27,19 @@ pub fn translate_input_to_chars_vec(untokenised_input: &String) -> Vec<String> {
         .collect();
 }
 
-fn tokenise(s: String) -> Token {
-    let c = s.chars().next().unwrap();
-
-    match c {
-        c if c == '+' => Token::Add,
-        c if c == '-' => Token::Subtract,
-        c if c == '/' => Token::Divide,
-        c if c == '*' => Token::Multiply,
-        c if c == '=' => Token::Eq,
-        c if c == '\n' => Token::Return,
+fn tokenise(s: &str) -> Token {
+    match s.chars().next().unwrap() {
+        '+' => Token::Add,
+        '-' => Token::Subtract,
+        '/' => Token::Divide,
+        '*' => Token::Multiply,
+        '=' => Token::Eq,
+        '\n' => Token::Return,
         c if c.is_numeric() => Token::Number(c),
         c if c.is_alphabetic() => Token::Letter(c),
-        _ => Token::Symbol(c),
+        c => Token::Symbol(c),
     }
 }
-
 pub fn scan<P>(reader: fn(P) -> Result<String, Error>, file_path: P) -> Vec<Token> {
     let input = reader(file_path).unwrap_or_else(|_| {
         eprintln!("Error reading file");
@@ -54,7 +51,7 @@ pub fn scan<P>(reader: fn(P) -> Result<String, Error>, file_path: P) -> Vec<Toke
 
     let tokenised_input: Vec<Token> = clean_untokenised_input_vec
         .iter()
-        .map(|x| tokenise(x.to_string()))
+        .map(|x| tokenise(x))
         .collect();
 
     return tokenised_input;
